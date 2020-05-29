@@ -14,6 +14,7 @@ void gra::initVariables()
 
 }
 
+
 void gra::initWindow()
 {
     this->videomode.height = 600;
@@ -21,6 +22,7 @@ void gra::initWindow()
     this ->window = new sf::RenderWindow(this->videomode, "Bomber", sf::Style::Titlebar | sf::Style::Close);
     this->window->setFramerateLimit(60);
 }
+
 
 void gra::initEnemies()
 {
