@@ -20,23 +20,29 @@ private:
     sf::Event ev;
 
 
-    // obiekty
+// obiekty
     std::vector<sf::RectangleShape> enemies;
     sf::RectangleShape enemy;
+    std::vector<sf::RectangleShape> desbloks;
+    sf::RectangleShape desblok;
+    sf::Texture texture;
+    sf::Sprite sprite;
 
 
-    //Pozycje kursora
+//Pozycje kursora
     sf::Vector2i mousePosWindow;
 
-    // logika gry
+// logika gry
     int points;
     float maxEnemies;
 
 //prywatne funkcje
+    void initTextures();
+    void initSprites();
     void initVariables();
     void initWindow();
     void initEnemies();
-
+    void initDesblok();
 public:
 
     //kontruktory i destruktory
@@ -48,12 +54,14 @@ public:
 
     //funkcje
     void spawnEnemy();
-
+    void spawnDesblok();
     void pollEvents();
     void updateMousePositions();
     void updateEnemies();
+    void updateDesblok();
     void update();
 
+    void renderDesblok();
     void renderEnemies();
     void render();
 
