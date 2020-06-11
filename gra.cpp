@@ -1,4 +1,5 @@
 #include "gra.h"
+#include "player.h"
 #include<iostream>
 #include<vector>
 
@@ -10,7 +11,7 @@ void gra::initVariables()
 
     //logika gry
     this->points = 0;
-    this->maxEnemies = 4;
+    this->maxPlayers = 4;
 
 }
 void gra::initTextures()
@@ -24,16 +25,22 @@ void gra::initTextures()
 void gra::initSprites()
 {
     this->sprite.setTexture(this->texture);
+    this->sprite.setTextureRect(sf::IntRect(10, 20, 20, 15));
 }
 
 
 void gra::initWindow()
 {
-    this->videomode.height = 600;
+    this->videomode.height = 800;
     this->videomode.width = 800;
     this ->window = new sf::RenderWindow(this->videomode, "Bomber", sf::Style::Titlebar | sf::Style::Close);
     this->window->setFramerateLimit(60);
 
+}
+
+void gra::initPlayers()
+{
+    this->player = new Player();
 }
 
 void gra::initDesblok()
@@ -42,6 +49,8 @@ void gra::initDesblok()
     this->desblok.setScale(sf::Vector2f(0.5f, 0.5f));
     this->enemy.setFillColor((sf::Color::Black));
 }
+
+
 
 void gra::initEnemies()
 {
@@ -59,12 +68,14 @@ gra::gra()
 {
     this->initVariables();
     this->initWindow();
+    this->initPlayers();
     this->initEnemies();
     this->initDesblok();
 }
 gra::~gra()
 {
     delete this->window;
+    delete this->player;
 }
 
 //akcesoria
@@ -74,22 +85,45 @@ const bool gra::dziala() const
 }
 
 //funkcje
+void gra::killplayer()
+{
 
+}
+
+void gra::bomb()
+{
+
+}
 
 // blok ktory mozna zniszczyc bomba
 void gra::spawnDesblok()
 {
-    this->desblok.setPosition(200,200);
-    this->desblok.setFillColor(sf::Color::Red);
+    this->desblok.setPosition(400, 400);
+    this->desblok.setFillColor(sf::Color::Black);
     this->desbloks.push_back(this->desblok);
 
 }
 
-// spawnowanie gracza, przeciwnikow
-void gra::spawnEnemy()
+
+
+void gra::spawnEnemy1()
 {
-    this->enemy.setPosition(100, 50);
-    this->enemy.setFillColor(sf::Color::Green);
+    this->enemy.setPosition(0, 750);
+    this->enemy.setFillColor(sf::Color::Red);
+    this->enemies.push_back(this->enemy);
+}
+
+void gra::spawnEnemy2()
+{
+    this->enemy.setPosition(750, 750);
+    this->enemy.setFillColor(sf::Color::Blue);
+    this->enemies.push_back(this->enemy);
+}
+
+void gra::spawnEnemy3()
+{
+    this->enemy.setPosition(750, 0);
+    this->enemy.setFillColor(sf::Color::Yellow);
     this->enemies.push_back(this->enemy);
 }
 
@@ -133,57 +167,60 @@ void gra::updateDesblok()
 }
 
 
+
 void gra::updateEnemies()
 {
-    if(this->enemies.size() < this->maxEnemies)
+    if(this->enemies.size() < this->maxPlayers)
     {
-        this->spawnEnemy();
+        this->spawnEnemy1();
+        this->spawnEnemy2();
+        this->spawnEnemy3();
     }
 
     //poruszanie sie
     // w nawiasach predkosci
-    for(int i=0; i<this->enemies.size(); i++)
-    {
-        //granica
-       this->enemies[i].move(0.f,0.f);
-        if(this->enemies[i].getPosition().y <= 0)
-       {
-             //sprawdzenie czy dotyka granicy mapy
-       }
-       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-        {
-             this->enemies[i].move(0.f,-2.f);
-        }
-
-       if((this->enemies[i].getPosition().y)>= 548)
-       {
+//    for(int i=0; i<this->enemies.size(); i++)
+//    {
+//        //granica
+//       this->enemies[i].move(0.f,0.f);
+//        if(this->enemies[i].getPosition().y <= 0)
+//       {
+//             //sprawdzenie czy dotyka granicy mapy
+//      }
+//       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+//        {
+//             this->enemies[i].move(0.f,-2.f);
+//        }
+//
+//       if((this->enemies[i].getPosition().y)>= 548)
+//       {
             //sprawdzenie czy dotyka granicy mapy
-       }
-       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-       {
-            this->enemies[i].move(0.f,2.f);
-       }
+//       }
+//       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+//       {
+//            this->enemies[i].move(0.f,2.f);
+//       }
 
-       if((this->enemies[i].getPosition().x) >= 748)
-       {
+//       if((this->enemies[i].getPosition().x) >= 748)
+//       {
              //sprawdzenie czy dotyka granicy mapy
-       }
-       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        {
-             this->enemies[i].move(2.f,0.f);
-        }
+//       }
+//       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+//        {
+//             this->enemies[i].move(2.f,0.f);
+//        }
 
-       if(this->enemies[i].getPosition().x <= 0)
-       {
+//       if(this->enemies[i].getPosition().x <= 0)
+//       {
              //sprawdzenie czy dotyka granicy mapy
-       }
-       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        {
-             this->enemies[i].move(-2.f,0.f);
-        }
+//       }
+//       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+//        {
+//             this->enemies[i].move(-2.f,0.f);
+//        }
         // pokazywanie pozycji
       // std::cout<< "(" << enemies[i].getPosition().x << ", " << enemies[i].getPosition().y << ")" << std::endl;
-    }
+//    }
 }
 
 //update
@@ -195,8 +232,10 @@ void gra::update()
 
     this->updateDesblok();
 
-     this->updateEnemies();
+    this->player->update(this->window);
+    this->updateEnemies();
 }
+
 
 void gra::renderEnemies()
 {
@@ -218,8 +257,10 @@ void gra::render()
     //renderowanie gry i kolejnych rzeczy na ekranie
 
     this->window->clear(sf::Color(125, 161, 232, 255));
+    this->initSprites();
 
     //rysuj przedmioty
+    this->player->renderPlayers(this->window);
     this->renderEnemies();
     this->renderDesblok();
 

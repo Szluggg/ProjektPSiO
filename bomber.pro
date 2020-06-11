@@ -14,7 +14,9 @@ CONFIG(debug, debug|release){
 
 SOURCES += \
         gra.cpp \
-        main.cpp
+        main.cpp \
+        player.cpp
 
 HEADERS += \
-    gra.h
+    gra.h \
+    player.h

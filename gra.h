@@ -1,6 +1,6 @@
 #ifndef GRA_H
 #define GRA_H
-
+#include <player.h>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -10,6 +10,9 @@
 class gra
 {
 private:
+//gracz
+    Player* player;
+    void initPlayers();
 
 //variables
 
@@ -21,10 +24,13 @@ private:
 
 
 // obiekty
+
     std::vector<sf::RectangleShape> enemies;
     sf::RectangleShape enemy;
+
     std::vector<sf::RectangleShape> desbloks;
     sf::RectangleShape desblok;
+
     sf::Texture texture;
     sf::Sprite sprite;
 
@@ -34,7 +40,7 @@ private:
 
 // logika gry
     int points;
-    float maxEnemies;
+    float maxPlayers;
 
 //prywatne funkcje
     void initTextures();
@@ -45,6 +51,7 @@ private:
     void initDesblok();
 public:
 
+
     //kontruktory i destruktory
     gra();
     virtual ~gra();
@@ -53,18 +60,56 @@ public:
     const bool dziala() const;
 
     //funkcje
-    void spawnEnemy();
+    void spawnEnemy1();
+    void spawnEnemy2();
+    void spawnEnemy3();
+
     void spawnDesblok();
+
     void pollEvents();
+
+    void bomb();
+
+
+    void killenemy1();
+    void killenemy2();
+    void killenemy3();
+    void killplayer();
+
     void updateMousePositions();
     void updateEnemies();
+    void updatePlayers();
     void updateDesblok();
     void update();
 
     void renderDesblok();
+    void renderPlayers();
     void renderEnemies();
     void render();
 
 };
+
+//class Player : gra
+//{
+//private:
+    // obiekty
+//        std::vector<sf::RectangleShape> players;
+//        sf::RectangleShape player;
+        //prywatne funkcje
+//            void initTextures();
+//            void initSprites();
+//            void initPlayers();
+//            friend void render();
+//public:
+
+    //kontruktory i destruktory
+//    Player();
+//    virtual ~Player();
+// funkcje
+//    void spawnPlayers();
+//    void killplayer();
+//    void updatePlayers();
+//    void renderPlayers();
+//};
 
 #endif // GRA_H
