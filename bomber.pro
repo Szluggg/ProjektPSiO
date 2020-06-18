@@ -13,10 +13,14 @@ CONFIG(debug, debug|release){
 }
 
 SOURCES += \
+        desblok.cpp \
         gra.cpp \
         main.cpp \
-        player.cpp
+        player.cpp \
+        undesblok.cpp
 
 HEADERS += \
+    desblok.h \
     gra.h \
-    player.h
+    player.h \
+    undesblok.h

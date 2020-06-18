@@ -1,6 +1,8 @@
 #ifndef GRA_H
 #define GRA_H
 #include <player.h>
+#include <desblok.h>
+#include <undesblok.h>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -12,6 +14,8 @@ class gra
 private:
 //gracz
     Player* player;
+    desBlok* desblok;
+    undesblok* undesBlok;
     void initPlayers();
 
 //variables
@@ -28,11 +32,10 @@ private:
     std::vector<sf::RectangleShape> enemies;
     sf::RectangleShape enemy;
 
-    std::vector<sf::RectangleShape> desbloks;
-    sf::RectangleShape desblok;
 
-    sf::Texture texture;
-    sf::Sprite sprite;
+
+    sf::Texture tloText;
+    sf::Sprite tloSprite;
 
 
 //Pozycje kursora
@@ -49,6 +52,7 @@ private:
     void initWindow();
     void initEnemies();
     void initDesblok();
+    void initUndesblok();
 public:
 
 
@@ -79,8 +83,9 @@ public:
     void updateMousePositions();
     void updateEnemies();
     void updatePlayers();
-    void updateDesblok();
+
     void update();
+
 
     void renderDesblok();
     void renderPlayers();
@@ -89,27 +94,6 @@ public:
 
 };
 
-//class Player : gra
-//{
-//private:
-    // obiekty
-//        std::vector<sf::RectangleShape> players;
-//        sf::RectangleShape player;
-        //prywatne funkcje
-//            void initTextures();
-//            void initSprites();
-//            void initPlayers();
-//            friend void render();
-//public:
 
-    //kontruktory i destruktory
-//    Player();
-//    virtual ~Player();
-// funkcje
-//    void spawnPlayers();
-//    void killplayer();
-//    void updatePlayers();
-//    void renderPlayers();
-//};
 
 #endif // GRA_H

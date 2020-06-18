@@ -6,6 +6,7 @@
 
 Player::Player()
 {
+    this->szybkosc = 2;
     this->initPlayers();
     this->initPlayerTextures();
     this->initPlayerSprites();
@@ -23,7 +24,7 @@ Player::~Player()
 }
 void Player::initPlayerTextures()
 {
-    if(!this->playTexture.loadFromFile("C:/Users/Krzysztof/Documents/psio/bomber/tekstury/player.png"))
+    if(!this->playTexture.loadFromFile("tekstury/player.png"))
     {
         std::cout << "Error - nie udalo sie zaladowac tekstury gracza" << std::endl;
     }
@@ -33,15 +34,15 @@ void Player::initPlayerSprites()
 {
     this->playSprite.setTexture(this->playTexture);
 
-    this->playSprite.scale(0.25f, 0.25f);
+    this->playSprite.scale(0.1f, 0.1f);
 }
 
 void Player::initPlayers()
 {
-    this->player.setPosition(0, 0);
-    this->player.setSize(sf::Vector2f(100.f, 100.f));
-    this->player.setScale(sf::Vector2f(0.5f, 0.5f));
-    this->player.setFillColor((sf::Color::Red));
+//    this->player.setPosition(0, 0);
+//    this->player.setSize(sf::Vector2f(100.f, 100.f));
+//    this->player.setScale(sf::Vector2f(0.5f, 0.5f));
+//    this->player.setFillColor((sf::Color::Red));
 
 }
 
@@ -49,13 +50,15 @@ void Player::initPlayers()
 void Player::spawnPlayers()
 {
     this->player.setPosition(0,0);
-    this->player.setFillColor(sf::Color::Green);
+//    this->player.setFillColor(sf::Color::Green);
     this->players.push_back(this->player);
 }
 
-void Player::updateBoundaries(const sf::RenderTarget* target)
-{
 
+
+void Player::move(const float X, const float Y)
+{
+    this->playSprite.move(this->szybkosc * X, this->szybkosc * Y);
 }
 
 void Player::updatePlayers()
@@ -65,65 +68,58 @@ void Player::updatePlayers()
         this->spawnPlayers();
     }
 
-    //poruszanie sie
-    // w nawiasach predkosci
-    for(int i=0; i<this->players.size(); i++)
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
-        //granica
-       this->players[i].move(0.f,0.f);
-        if(this->players[i].getPosition().y <= 0)
-       {
-             //sprawdzenie czy dotyka granicy mapy
-       }
-       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-        {
-             this->players[i].move(0.f,-2.f);
-        }
-
-      if((this->players[i].getGlobalBounds().top)>= (800  - (players[i].getSize().y)/2))
-      {
-            //sprawdzenie czy dotyka granicy mapy
-       }
-       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-       {
-            this->players[i].move(0.f,2.f);
-       }
-
-       if((this->players[i].getPosition().x) >= (800  - (players[i].getSize().x)/2))
-       {
-             //sprawdzenie czy dotyka granicy mapy
-       }
-       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        {
-             this->players[i].move(2.f,0.f);
-        }
-
-       if(this->players[i].getPosition().x <= 0)
-       {
-             //sprawdzenie czy dotyka granicy mapy
-       }
-       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        {
-             this->players[i].move(-2.f,0.f);
-        }
-        // pokazywanie pozycji
-       std::cout<< "(" << players[i].getPosition().x << ", " << players[i].getPosition().y << ")" << std::endl;
+         this->move(0.f,-1.f);
+    }
+   else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+   {
+        this->move(0.f,1.f);
+   }
+   if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    {
+         this->move(1.f,0.f);
+    }
+   else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    {
+         this->move(-1.f,0.f);
     }
 }
+void Player::updateBoundaries(const sf::RenderTarget* target)
+{
+    //granice planszy
+    if(this->playSprite.getGlobalBounds().left <= 0.f)
+    {
+        this->playSprite.setPosition(0.f, this->playSprite.getGlobalBounds().top);
+    }
+    if (this->playSprite.getGlobalBounds().left + this->playSprite.getGlobalBounds().width >= target->getSize().x)
+    {
+        this->playSprite.setPosition(target->getSize().x - this->playSprite.getGlobalBounds().width, this->playSprite.getGlobalBounds().top);
+    }
+    if(this->playSprite.getGlobalBounds().top <= 0.f)
+    {
+        this->playSprite.setPosition(this->playSprite.getGlobalBounds().left, 0.f);
+    }
+    if (this->playSprite.getGlobalBounds().top + this->playSprite.getGlobalBounds().height >= target->getSize().y)
+    {
+        this->playSprite.setPosition(this->playSprite.getGlobalBounds().left, target->getSize().y - this->playSprite.getGlobalBounds().height);
+    }
 
+}
 void Player::update(const sf::RenderTarget* target)
 {
-//    this->updateBoundaries(target);
+    this->updateBoundaries(target);
+
     this->updatePlayers();
 }
 
 void Player::renderPlayers(sf::RenderTarget* target)
 {
 //    window->draw(this->player);
-    for(auto&e : this->players)
-    {
-        target->draw(e);
-    }
+ //   for(auto&e : this->players)
+//    {
+        target->draw(this->playSprite);
+//    }
 }
 
 // Bomba

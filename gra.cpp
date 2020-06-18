@@ -1,5 +1,6 @@
 #include "gra.h"
 #include "player.h"
+#include "desblok.h"
 #include<iostream>
 #include<vector>
 
@@ -16,7 +17,7 @@ void gra::initVariables()
 }
 void gra::initTextures()
 {
-    if(!this->texture.loadFromFile("tekstury/grid.jpg"))
+    if(!this->tloText.loadFromFile("tekstury/tlo.jpg"))
     {
         std::cout<<"blad - tekstura sie nie zaladowala" << std::endl;
     }
@@ -24,8 +25,7 @@ void gra::initTextures()
 
 void gra::initSprites()
 {
-    this->sprite.setTexture(this->texture);
-    this->sprite.setTextureRect(sf::IntRect(10, 20, 20, 15));
+    this->tloSprite.setTexture(this->tloText);
 }
 
 
@@ -45,12 +45,12 @@ void gra::initPlayers()
 
 void gra::initDesblok()
 {
-    this->desblok.setSize(sf::Vector2f(100.f, 100.f));
-    this->desblok.setScale(sf::Vector2f(0.5f, 0.5f));
-    this->enemy.setFillColor((sf::Color::Black));
+    this->desblok = new desBlok();
 }
-
-
+void gra::initUndesblok()
+{
+    this->undesBlok = new undesblok();
+}
 
 void gra::initEnemies()
 {
@@ -68,14 +68,19 @@ gra::gra()
 {
     this->initVariables();
     this->initWindow();
+    this->initTextures();
+    this->initSprites();
     this->initPlayers();
     this->initEnemies();
     this->initDesblok();
+    this->initUndesblok();
 }
 gra::~gra()
 {
     delete this->window;
     delete this->player;
+    delete this->desblok;
+    delete this->undesBlok;
 }
 
 //akcesoria
@@ -95,14 +100,7 @@ void gra::bomb()
 
 }
 
-// blok ktory mozna zniszczyc bomba
-void gra::spawnDesblok()
-{
-    this->desblok.setPosition(400, 400);
-    this->desblok.setFillColor(sf::Color::Black);
-    this->desbloks.push_back(this->desblok);
 
-}
 
 
 
@@ -149,22 +147,6 @@ void gra::updateMousePositions()
 this->mousePosWindow = sf::Mouse::getPosition(*this->window);
 }
 
-//wywołanie spawnowania blokow
-void gra::updateDesblok()
-{
-    this->spawnDesblok();
-    for(int i=0; i<this->enemies.size(); i++)
-    {
-        if(this->enemies[i].getPosition().x < desbloks[i].getPosition().x)
-        {
-            this->enemies[i].move(0.f,0.f);
-        }
-        else if(this->enemies[i].getPosition().y < desbloks[i].getPosition().y)
-        {
-            this->enemies[i].move(0.f,0.f);
-        }
-    }
-}
 
 
 
@@ -176,51 +158,6 @@ void gra::updateEnemies()
         this->spawnEnemy2();
         this->spawnEnemy3();
     }
-
-    //poruszanie sie
-    // w nawiasach predkosci
-//    for(int i=0; i<this->enemies.size(); i++)
-//    {
-//        //granica
-//       this->enemies[i].move(0.f,0.f);
-//        if(this->enemies[i].getPosition().y <= 0)
-//       {
-//             //sprawdzenie czy dotyka granicy mapy
-//      }
-//       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-//        {
-//             this->enemies[i].move(0.f,-2.f);
-//        }
-//
-//       if((this->enemies[i].getPosition().y)>= 548)
-//       {
-            //sprawdzenie czy dotyka granicy mapy
-//       }
-//       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-//       {
-//            this->enemies[i].move(0.f,2.f);
-//       }
-
-//       if((this->enemies[i].getPosition().x) >= 748)
-//       {
-             //sprawdzenie czy dotyka granicy mapy
-//       }
-//       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-//        {
-//             this->enemies[i].move(2.f,0.f);
-//        }
-
-//       if(this->enemies[i].getPosition().x <= 0)
-//       {
-             //sprawdzenie czy dotyka granicy mapy
-//       }
-//       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-//        {
-//             this->enemies[i].move(-2.f,0.f);
-//        }
-        // pokazywanie pozycji
-      // std::cout<< "(" << enemies[i].getPosition().x << ", " << enemies[i].getPosition().y << ")" << std::endl;
-//    }
 }
 
 //update
@@ -230,9 +167,10 @@ void gra::update()
 
     this->updateMousePositions();
 
-    this->updateDesblok();
 
+    this->desblok->update();
     this->player->update(this->window);
+    this->undesBlok->update();
     this->updateEnemies();
 }
 
@@ -245,24 +183,20 @@ void gra::renderEnemies()
     }
 }
 
-void gra::renderDesblok()
-{
-for(auto&e : this->desbloks)
-{
-    this->window->draw(e);
-}
-}
+
+
 void gra::render()
 {
     //renderowanie gry i kolejnych rzeczy na ekranie
 
     this->window->clear(sf::Color(125, 161, 232, 255));
+    window->draw(this->tloSprite);
     this->initSprites();
 
     //rysuj przedmioty
     this->player->renderPlayers(this->window);
     this->renderEnemies();
-    this->renderDesblok();
-
+    this->undesBlok->render(this->window);
+    this->desblok->render(this->window);
     this->window->display();
 }

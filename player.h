@@ -11,8 +11,10 @@ class Player
 
 private:
     friend class gra;
+    friend class undesblok;
     // obiekty
         Player* gracz;
+
         sf::Texture playTexture;
         sf::Sprite playSprite;
         std::vector<sf::RectangleShape> players;
@@ -20,6 +22,7 @@ private:
         std::vector<sf::CircleShape> bomby;
         sf::CircleShape bombka;
 
+        float szybkosc;
         sf::Texture bombTexture;
         sf::Sprite bombSprite;
 
@@ -35,6 +38,7 @@ public:
     Player();
     virtual ~Player();
     int maxPlayers = 4;
+
 // funkcje
     void bombradius(float x);
     void bomb();
@@ -42,6 +46,7 @@ public:
     void playerbomb();
 
     void spawnPlayers();
+    void move(const float X, const float Y);
     void killplayer();
     void updatePlayers();
     void updateBoundaries(const sf::RenderTarget* target);
